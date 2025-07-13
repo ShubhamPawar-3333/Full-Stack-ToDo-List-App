@@ -4,14 +4,15 @@
 This is a full-stack Todo List application built with React (frontend), Spring Boot (backend), and PostgreSQL (database). The application allows users to manage personal task lists with CRUD operations and secure authentication.
 
 ## Project Status
-- **Phase**: Planning
+- **Phase**: Backend Development
 - **Completed Tasks**:
   - Defined requirements (see `docs/requirements.md`).
   - Designed architecture (see `docs/architecture.md`).
   - Set up Git repository with `.gitignore` for Java and Node.js.
   - Set up development environment (see `docs/dev-environment.md`).
   - Planned CI/CD pipeline (see `docs/ci-cd-pipeline.md`).
-- **Current Task**: Ongoing planning phase.
+  - Set up Spring Boot project in `backend/` directory.
+- **Current Task**: Ongoing backend development.
 
 ## Setup Instructions
 1. **Clone the Repository**:
@@ -21,7 +22,19 @@ This is a full-stack Todo List application built with React (frontend), Spring B
    ```
 2. **Install Dependencies**:
    - Follow instructions in `docs/dev-environment.md` for Node.js, Java, and Maven setup.
-3. **Documentation**:
+   - For backend:
+     ```bash
+     cd backend
+     mvn install
+     ```
+3. **Run the Backend**:
+   - Start the Spring Boot application:
+     ```bash
+     cd backend
+     mvn spring-boot:run
+     ```
+   - Access the H2 console at `http://localhost:8080/h2-console` (username: sa, password: <empty>).
+4. **Documentation**:
    - Requirements are documented in `docs/requirements.md`.
    - Architecture is documented in `docs/architecture.md`.
    - Development environment setup is documented in `docs/dev-environment.md`.
