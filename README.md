@@ -12,7 +12,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Set up development environment (see `docs/dev-environment.md`).
   - Planned CI/CD pipeline (see `docs/ci-cd-pipeline.md`).
   - Set up Spring Boot project in `backend/` directory.
-  - Designed database schema for Users and Tasks tables using JPA and Lombok.
+  - Designed database schema for Users and Tasks tables using JPA, Lombok, and TaskStatus enum.
 - **Current Task**: Ongoing backend development.
 
 ## Setup Instructions
