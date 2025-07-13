@@ -10,12 +10,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class ToDoListApplication {
-	/**
-	 * Main method to start the Spring Boot application.
-	 * @param args Command-line arguments.
-	 */
-	public static void main(String[] args) {
-		SpringApplication.run(ToDoListApplication.class, args);
-	}
-
+    /**
+     * Main method to start the Spring Boot application.
+     * @param args Command-line arguments.
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(ToDoListApplication.class, args);
+    }
 }
