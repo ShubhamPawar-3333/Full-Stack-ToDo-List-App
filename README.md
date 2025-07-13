@@ -10,6 +10,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Designed architecture (see `docs/architecture.md`).
   - Set up Git repository with `.gitignore` for Java and Node.js.
   - Set up development environment (see `docs/dev-environment.md`).
+  - Planned CI/CD pipeline (see `docs/ci-cd-pipeline.md`).
 - **Current Task**: Ongoing planning phase.
 
 ## Setup Instructions
@@ -24,6 +25,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
    - Requirements are documented in `docs/requirements.md`.
    - Architecture is documented in `docs/architecture.md`.
    - Development environment setup is documented in `docs/dev-environment.md`.
+   - CI/CD pipeline plan is documented in `docs/ci-cd-pipeline.md`.
 
 ## Contribution Guidelines
 - **Branching Strategy**:
