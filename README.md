@@ -13,6 +13,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Planned CI/CD pipeline (see `docs/ci-cd-pipeline.md`).
   - Set up Spring Boot project in `backend/` directory.
   - Designed database schema for Users and Tasks tables using JPA, Lombok, and TaskStatus enum.
+  - Implemented REST APIs for task CRUD operations (`POST /tasks`, `GET /tasks`, `PUT /tasks/{id}`, `DELETE /tasks/{id}`).
 - **Current Task**: Ongoing backend development.
 
 ## Setup Instructions
@@ -37,7 +38,21 @@ This is a full-stack Todo List application built with React (frontend), Spring B
      ```
    - Access the H2 console at `http://localhost:8080/h2-console` (username: sa, password: <empty>).
    - Verify the schema: Check for `USERS` and `TASKS` tables in the H2 console.
-4. **Documentation**:
+4. **Test the APIs** (temporary, pre-authentication):
+   - Use tools like Postman or curl to test the task endpoints:
+     ```bash
+     # Create a task
+     curl -X POST http://localhost:8080/tasks -H "Content-Type: application/json" -d '{"title":"Test Task","description":"Test Description","status":"PENDING"}'
+     # Get all tasks
+     curl http://localhost:8080/tasks
+     # Get a task by ID
+     curl http://localhost:8080/tasks/1
+     # Update a task
+     curl -X PUT http://localhost:8080/tasks/1 -H "Content-Type: application/json" -d '{"title":"Updated Task","description":"Updated Description","status":"COMPLETED"}'
+     # Delete a task
+     curl -X DELETE http://localhost:8080/tasks/1
+     ```
+5. **Documentation**:
    - Requirements are documented in `docs/requirements.md`.
    - Architecture is documented in `docs/architecture.md`.
    - Development environment setup is documented in `docs/dev-environment.md`.
