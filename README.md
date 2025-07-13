@@ -9,6 +9,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Defined requirements (see `docs/requirements.md`).
   - Designed architecture (see `docs/architecture.md`).
   - Set up Git repository with `.gitignore` for Java and Node.js.
+  - Set up development environment (see `docs/dev-environment.md`).
 - **Current Task**: Ongoing planning phase.
 
 ## Setup Instructions
@@ -18,11 +19,11 @@ This is a full-stack Todo List application built with React (frontend), Spring B
    cd todo-list-app
    ```
 2. **Install Dependencies**:
-   - Backend: Java 17, Maven (to be set up in later phases).
-   - Frontend: Node.js, npm (to be set up in later phases).
+   - Follow instructions in `docs/dev-environment.md` for Node.js, Java, and Maven setup.
 3. **Documentation**:
    - Requirements are documented in `docs/requirements.md`.
    - Architecture is documented in `docs/architecture.md`.
+   - Development environment setup is documented in `docs/dev-environment.md`.
 
 ## Contribution Guidelines
 - **Branching Strategy**:
