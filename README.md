@@ -12,6 +12,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Set up development environment (see `docs/dev-environment.md`).
   - Planned CI/CD pipeline (see `docs/ci-cd-pipeline.md`).
   - Set up Spring Boot project in `backend/` directory.
+  - Designed database schema for Users and Tasks tables using JPA and Lombok.
 - **Current Task**: Ongoing backend development.
 
 ## Setup Instructions
@@ -27,6 +28,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
      cd backend
      mvn install
      ```
+   - Ensure your IDE supports Lombok (e.g., enable Annotation Processing in IntelliJ IDEA or install the Lombok plugin).
 3. **Run the Backend**:
    - Start the Spring Boot application:
      ```bash
@@ -34,6 +36,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
      mvn spring-boot:run
      ```
    - Access the H2 console at `http://localhost:8080/h2-console` (username: sa, password: <empty>).
+   - Verify the schema: Check for `USERS` and `TASKS` tables in the H2 console.
 4. **Documentation**:
    - Requirements are documented in `docs/requirements.md`.
    - Architecture is documented in `docs/architecture.md`.
