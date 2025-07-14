@@ -14,6 +14,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Set up Spring Boot project in `backend/` directory.
   - Designed database schema for Users and Tasks tables using JPA, Lombok, and TaskStatus enum.
   - Implemented REST APIs for task CRUD operations (`POST /tasks`, `GET /tasks`, `PUT /tasks/{id}`, `DELETE /tasks/{id}`).
+  - Set up modern JWT authentication with `/auth/register` and `/auth/login` endpoints using Spring Security and jjwt 0.12.6.
 - **Current Task**: Ongoing backend development.
 
 ## Setup Instructions
@@ -38,19 +39,25 @@ This is a full-stack Todo List application built with React (frontend), Spring B
      ```
    - Access the H2 console at `http://localhost:8080/h2-console` (username: sa, password: <empty>).
    - Verify the schema: Check for `USERS` and `TASKS` tables in the H2 console.
-4. **Test the APIs** (temporary, pre-authentication):
-   - Use tools like Postman or curl to test the task endpoints:
+4. **Test the APIs**:
+   - Use tools like Postman or curl to test authentication and task endpoints:
      ```bash
-     # Create a task
-     curl -X POST http://localhost:8080/tasks -H "Content-Type: application/json" -d '{"title":"Test Task","description":"Test Description","status":"PENDING"}'
+     # Register a user
+     curl -X POST http://localhost:8080/auth/register -H "Content-Type: application/json" -d '{"username":"testuser","password":"testpass"}'
+     # Login to get JWT token
+     curl -X POST http://localhost:8080/auth/login -H "Content-Type: application/json" -d '{"username":"testuser","password":"testpass"}'
+     # Save the returned JWT token
+     TOKEN="your_jwt_token_here"
+     # Create a task (include JWT in Authorization header)
+     curl -X POST http://localhost:8080/tasks -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"title":"Test Task","description":"Test Description","status":"PENDING"}'
      # Get all tasks
-     curl http://localhost:8080/tasks
+     curl http://localhost:8080/tasks -H "Authorization: Bearer $TOKEN"
      # Get a task by ID
-     curl http://localhost:8080/tasks/1
+     curl http://localhost:8080/tasks/1 -H "Authorization: Bearer $TOKEN"
      # Update a task
-     curl -X PUT http://localhost:8080/tasks/1 -H "Content-Type: application/json" -d '{"title":"Updated Task","description":"Updated Description","status":"COMPLETED"}'
+     curl -X PUT http://localhost:8080/tasks/1 -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"title":"Updated Task","description":"Updated Description","status":"COMPLETED"}'
      # Delete a task
-     curl -X DELETE http://localhost:8080/tasks/1
+     curl -X DELETE http://localhost:8080/tasks/1 -H "Authorization: Bearer $TOKEN"
      ```
 5. **Documentation**:
    - Requirements are documented in `docs/requirements.md`.

@@ -18,7 +18,14 @@ import java.util.stream.Collectors;
 @Service
 public class TaskService {
 
+    /**
+     * Repository for performing CRUD operations on Task entities.
+     */
     private final TaskRepository taskRepository;
+
+    /**
+     * Repository for accessing and managing User entity data.
+     */
     private final UserRepository userRepository;
 
     public TaskService(TaskRepository taskRepository, UserRepository userRepository) {
@@ -32,7 +39,7 @@ public class TaskService {
      * @param taskDTO The task data transfer object.
      * @return The created task DTO.
      */
-    public TaskDTO createTask(TaskDTO taskDTO){
+    public TaskDTO createTask(TaskDTO taskDTO) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -51,7 +58,7 @@ public class TaskService {
      * @return List of task DTOs.
      */
     @PreAuthorize("hasRole('USER')")
-    public List<TaskDTO> getTaskByUser(){
+    public List<TaskDTO> getTaskByUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -68,7 +75,7 @@ public class TaskService {
      * @return The task DTO, or null if not found.
      */
     @PreAuthorize("hasRole('USER')")
-    public TaskDTO getTaskByID(Long id){
+    public TaskDTO getTaskByID(Long id) {
         return taskRepository.findById(id)
                 .map(this::toDTO)
                 .orElse(null);
@@ -82,7 +89,7 @@ public class TaskService {
      * @return The updated task DTO, or null if not found.
      */
     @PreAuthorize("hasRole('USER')")
-    public TaskDTO updateTask(Long id, TaskDTO taskDTO){
+    public TaskDTO updateTask(Long id, TaskDTO taskDTO) {
         return taskRepository.findById(id)
                 .map(task -> {
                     task.setTitle(taskDTO.getTitle());
@@ -101,9 +108,9 @@ public class TaskService {
      * @return True if deleted, false if not found.
      */
     @PreAuthorize("hasRole('USER')")
-    public boolean deleteTask(Long id){
+    public boolean deleteTask(Long id) {
         boolean idExists = taskRepository.existsById(id);
-        if(idExists){
+        if (idExists) {
             taskRepository.deleteById(id);
             return true;
         }
@@ -116,7 +123,7 @@ public class TaskService {
      * @param task The task entity.
      * @return The task DTO.
      */
-    private TaskDTO toDTO(Task task){
+    private TaskDTO toDTO(Task task) {
         return new TaskDTO(
                 task.getId(),
                 task.getTitle(),

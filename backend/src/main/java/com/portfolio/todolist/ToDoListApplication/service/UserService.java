@@ -8,17 +8,29 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.Optional;
 
 /**
  * Service class for user registration, authentication, and user details loading.
  */
+@Service
 public class UserService implements UserDetailsService {
 
+    /**
+     * Repository for accessing and managing user data in the database.
+     */
     private final UserRepository userRepository;
+
+    /**
+     * Encodes and verifies user passwords using secure hashing (e.g., BCrypt).
+     */
     private final PasswordEncoder passwordEncoder;
+
+    /**
+     * Generates and validates JWT tokens for authentication and authorization.
+     */
     private final JwtTokenProvider jwtTokenProvider;
 
     public UserService(
@@ -38,8 +50,8 @@ public class UserService implements UserDetailsService {
      * @return The registered username.
      * @throws IllegalArgumentException if username already exists.
      */
-    public String registerUser(UserDTO userDTO){
-        if(userRepository.findByUsername(userDTO.getUsername()).isPresent()){
+    public String registerUser(UserDTO userDTO) {
+        if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Username already exists");
         }
         User user = new User();
@@ -56,10 +68,10 @@ public class UserService implements UserDetailsService {
      * @return The JWT token.
      * @throws IllegalArgumentException if credentials are invalid.
      */
-    public String loginUser(UserDTO userDTO){
+    public String loginUser(UserDTO userDTO) {
         User user = userRepository.findByUsername(userDTO.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Username or password"));
-        if(!passwordEncoder.matches(userDTO.getPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Invalid username or password");
         }
         return jwtTokenProvider.generateToken(user.getUsername());

@@ -13,8 +13,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskDTO {
+    /**
+     * Unique identifier of the task.
+     */
     private Long id;
+
+    /**
+     * Title or name of the task.
+     */
     private String title;
+
+    /**
+     * Detailed description of the task.
+     */
     private String description;
+
+    /**
+     * Status of the task (e.g., PENDING, IN_PROGRESS, COMPLETED).
+     */
     private TaskStatus status;
 }

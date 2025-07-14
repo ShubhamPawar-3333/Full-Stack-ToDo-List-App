@@ -18,11 +18,19 @@ public class JwtTokenProvider {
 
 //    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 //    private final long validityInMilliseconds = 3600000; // 1 hour
+
+    /**
+     * The cryptographic key used to sign and verify JWT tokens.
+     */
     private final Key key;
+
+    /**
+     * The validity duration of a JWT token in milliseconds.
+     */
     private final long validityInMilliseconds;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secret,
-                            @Value("${jwt.expiration:3600000}") long validityInMilliseconds){
+                            @Value("${jwt.expiration:3600000}") long validityInMilliseconds) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.validityInMilliseconds = validityInMilliseconds;
     }
@@ -48,7 +56,7 @@ public class JwtTokenProvider {
      * @param token The JWT token.
      * @return The username.
      */
-    public String getUsernameFromToken(String token){
+    public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(key)
                 .build()
@@ -63,8 +71,8 @@ public class JwtTokenProvider {
      * @param token The JWT token.
      * @return True if valid, false otherwise.
      */
-    public boolean validateToken(String token){
-        try{
+    public boolean validateToken(String token) {
+        try {
             Jwts.parser().setSigningKey(key).build().parseSignedClaims(token);
             return true;
         } catch (Exception e) {

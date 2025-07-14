@@ -1,12 +1,17 @@
 package com.portfolio.todolist.ToDoListApplication.controller;
 
 import com.portfolio.todolist.ToDoListApplication.dto.TaskDTO;
-import com.portfolio.todolist.ToDoListApplication.model.Task;
-import com.portfolio.todolist.ToDoListApplication.model.User;
-import com.portfolio.todolist.ToDoListApplication.repository.TaskRepository;
 import com.portfolio.todolist.ToDoListApplication.service.TaskService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.List;
 
@@ -17,6 +22,9 @@ import java.util.List;
 @RequestMapping("/tasks")
 public class TaskController {
 
+    /**
+     * Service layer for managing task-related operations.
+     */
     private final TaskService taskService;
 
     public TaskController(TaskService taskService) {
@@ -30,7 +38,7 @@ public class TaskController {
      * @return The created task DTO.
      */
     @PostMapping
-    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO){
+    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
 //        // Note: User is placeholder; authentication will be implemented later.
 //        User user = new User("tempUser", "tempPassword") // temporary for testing
         TaskDTO createdTask = taskService.createTask(taskDTO);
@@ -56,9 +64,9 @@ public class TaskController {
      * @return The task DTO, or 404 if not found.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id){
+    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
         TaskDTO taskDTO = taskService.getTaskByID(id);
-        if(taskDTO != null){
+        if (taskDTO != null) {
             return ResponseEntity.ok(taskDTO);
         }
         return ResponseEntity.notFound().build();
@@ -72,9 +80,9 @@ public class TaskController {
      * @return The updated task DTO, or 404 if not found.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO){
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
         TaskDTO updatedTask = taskService.updateTask(id, taskDTO);
-        if(updatedTask != null){
+        if (updatedTask != null) {
             return ResponseEntity.ok(updatedTask);
         }
         return ResponseEntity.notFound().build();
@@ -87,8 +95,8 @@ public class TaskController {
      * @return 204 if deleted, 404 if not found.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id){
-        if(taskService.deleteTask(id)){
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        if (taskService.deleteTask(id)) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
+    /**
+     * Service layer for user registration and authentication.
+     */
     private final UserService userService;
 
-    public AuthController(UserService userService){
+    public AuthController(UserService userService) {
         this.userService = userService;
     }
 
@@ -28,7 +31,7 @@ public class AuthController {
      * @return The registered username.
      */
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserDTO userDTO){
+    public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {
         String username = userService.registerUser(userDTO);
         return ResponseEntity.ok(username);
     }
@@ -40,7 +43,7 @@ public class AuthController {
      * @return The JWT token.
      */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO){
+    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
         String token = userService.loginUser(userDTO);
         return ResponseEntity.ok(token);
     }

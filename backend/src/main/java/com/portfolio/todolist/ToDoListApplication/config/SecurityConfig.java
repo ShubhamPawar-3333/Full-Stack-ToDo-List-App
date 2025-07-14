@@ -1,7 +1,9 @@
 package com.portfolio.todolist.ToDoListApplication.config;
 
+import com.portfolio.todolist.ToDoListApplication.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -21,9 +23,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    /**
+     * JWT filter for handling authentication in incoming requests.
+     */
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter){
+    public SecurityConfig(@Lazy JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
@@ -45,7 +50,9 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**", "/h2-console/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(
+                        jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class);
 
         // Enable H2 console access
         http.headers(header ->
@@ -64,7 +71,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration
-    ) throws Exception{
+    ) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -74,7 +81,7 @@ public class SecurityConfig {
      * @return The PasswordEncoder.
      */
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
