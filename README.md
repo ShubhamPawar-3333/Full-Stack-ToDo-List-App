@@ -16,7 +16,8 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Implemented REST APIs for task CRUD operations (`POST /tasks`, `GET /tasks`, `PUT /tasks/{id}`, `DELETE /tasks/{id}`).
   - Set up modern JWT authentication with `/auth/register` and `/auth/login` endpoints using Spring Security and jjwt 0.12.6.
   - Integrated H2 database with JPA/Hibernate for User and Task entities, supporting authentication and CRUD operations.
-- **Current Task**: Write backend tests (unit and integration tests).
+  - Added input validation for user and task inputs using @Valid and custom validators, with global exception handling.
+- **Current Task**: Write unit tests (unit and integration tests).
 
 ## Setup Instructions
 1. **Clone the Repository**:
@@ -62,6 +63,21 @@ This is a full-stack Todo List application built with React (frontend), Spring B
      # Delete a task
      curl -X DELETE http://localhost:8080/tasks/1 -H "Authorization: Bearer $TOKEN"
      ```
+   - Test input validation (expect HTTP 400 for invalid inputs):
+     ```bash
+     # Invalid user registration (empty username)
+     curl -X POST http://localhost:8080/auth/register -H "Content-Type: application/json" -d '{"username":"","password":"testpass"}'
+     # Expected response: {"username":"Username is required"}
+     # Invalid user registration (password too short)
+     curl -X POST http://localhost:8080/auth/register -H "Content-Type: application/json" -d '{"username":"testuser","password":"short"}'
+     # Expected response: {"password":"Password must be between 6 and 100 characters"}
+     # Invalid task creation (empty title)
+     curl -X POST http://localhost:8080/tasks -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"title":"","description":"Test Description","status":"PENDING"}'
+     # Expected response: {"title":"Title is required"}
+     # Invalid task creation (missing status)
+     curl -X POST http://localhost:8080/tasks -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"title":"Test Task","description":"Test Description"}'
+     # Expected response: {"status":"Status is required"}
+     ```
    - Verify database operations in H2 console:
      - After registering a user, check `USERS` table for new entry (hashed password).
      - After creating a task, check `TASKS` table for new entry with correct `USER_ID`.
@@ -75,7 +91,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
 - **Branching Strategy**:
   - `main`: Production-ready code, protected branch.
   - `develop`: Integration branch for feature development.
-  - `feature/<task-name>`: Feature branches for specific tasks (e.g., `feature/integrate-database`).
+  - `feature/<task-name>`: Feature branches for specific tasks (e.g., `feature/add-input-validation`).
   - `bugfix/<issue-id>`: Branches for bug fixes.
 - **Git Workflow**:
   1. Create a feature branch from `develop`: `git checkout develop && git checkout -b feature/<task-name>`.
@@ -84,7 +100,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   4. Create a pull request (PR) to `develop` for review.
   5. After approval, merge PR and delete the feature branch.
 - **Commit Message Guidelines**:
-  - Use present tense (e.g., "Add database integration" instead of "Added").
+  - Use present tense (e.g., "Add input validation" instead of "Added").
   - Reference task or issue numbers if applicable.
 - Ensure all changes are documented in `docs/` where applicable.
 - Run local tests (to be set up in later phases) before pushing changes.

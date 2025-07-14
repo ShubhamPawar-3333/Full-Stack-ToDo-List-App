@@ -2,6 +2,7 @@ package com.portfolio.todolist.ToDoListApplication.controller;
 
 import com.portfolio.todolist.ToDoListApplication.dto.UserDTO;
 import com.portfolio.todolist.ToDoListApplication.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +32,7 @@ public class AuthController {
      * @return The registered username.
      */
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> register(@Valid @RequestBody UserDTO userDTO) {
         String username = userService.registerUser(userDTO);
         return ResponseEntity.ok(username);
     }
@@ -43,7 +44,7 @@ public class AuthController {
      * @return The JWT token.
      */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> login(@Valid @RequestBody UserDTO userDTO) {
         String token = userService.loginUser(userDTO);
         return ResponseEntity.ok(token);
     }

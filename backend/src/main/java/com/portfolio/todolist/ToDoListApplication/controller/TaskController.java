@@ -2,6 +2,7 @@ package com.portfolio.todolist.ToDoListApplication.controller;
 
 import com.portfolio.todolist.ToDoListApplication.dto.TaskDTO;
 import com.portfolio.todolist.ToDoListApplication.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +39,7 @@ public class TaskController {
      * @return The created task DTO.
      */
     @PostMapping
-    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskDTO taskDTO) {
 //        // Note: User is placeholder; authentication will be implemented later.
 //        User user = new User("tempUser", "tempPassword") // temporary for testing
         TaskDTO createdTask = taskService.createTask(taskDTO);
@@ -80,7 +81,9 @@ public class TaskController {
      * @return The updated task DTO, or 404 if not found.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> updateTask(
+            @PathVariable Long id,
+            @Valid @RequestBody TaskDTO taskDTO) {
         TaskDTO updatedTask = taskService.updateTask(id, taskDTO);
         if (updatedTask != null) {
             return ResponseEntity.ok(updatedTask);
