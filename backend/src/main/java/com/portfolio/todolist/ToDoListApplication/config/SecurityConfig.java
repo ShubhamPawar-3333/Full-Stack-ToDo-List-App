@@ -2,11 +2,16 @@ package com.portfolio.todolist.ToDoListApplication.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -14,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * Spring Security configuration for JWT-based authentication.
  */
 @Configuration
-@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -24,7 +29,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Configures HTTP security settings.
+     * Configures the security filter chain for HTTP requests.
      *
      * @param http The HttpSecurity configuration.
      * @return The configured SecurityFilterChain.
@@ -48,5 +53,29 @@ public class SecurityConfig {
                 header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
         return http.build();
+    }
+
+    /**
+     * Provides the AuthenticationManager bean.
+     *
+     * @param authenticationConfiguration The authentication configuration.
+     * @return The AuthenticationManager.
+     * @throws Exception If configuration fails.
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration
+    ) throws Exception{
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    /**
+     * Provides the PasswordEncoder bean for BCrypt hashing.
+     *
+     * @return The PasswordEncoder.
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
