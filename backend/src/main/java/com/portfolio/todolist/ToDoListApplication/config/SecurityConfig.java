@@ -1,9 +1,11 @@
 package com.portfolio.todolist.ToDoListApplication.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -28,6 +30,7 @@ public class SecurityConfig {
      * @return The configured SecurityFilterChain.
      * @throws Exception If configuration fails.
      */
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -42,7 +45,7 @@ public class SecurityConfig {
 
         // Enable H2 console access
         http.headers(header ->
-                header.frameOptions(frameOption -> frameOption.disable()));
+                header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
         return http.build();
     }
