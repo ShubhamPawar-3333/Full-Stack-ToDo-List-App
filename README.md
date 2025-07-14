@@ -1,7 +1,7 @@
 # Todo List Application
 
 ## Overview
-This is a full-stack Todo List application built with React (frontend), Spring Boot (backend), and PostgreSQL (database). The application allows users to manage personal task lists with CRUD operations and secure authentication.
+This is a full-stack Todo List application built with React (frontend), Spring Boot (backend), and PostgreSQL (database, using H2 for development). The application allows users to manage personal task lists with CRUD operations and secure authentication.
 
 ## Project Status
 - **Phase**: Backend Development
@@ -15,7 +15,8 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Designed database schema for Users and Tasks tables using JPA, Lombok, and TaskStatus enum.
   - Implemented REST APIs for task CRUD operations (`POST /tasks`, `GET /tasks`, `PUT /tasks/{id}`, `DELETE /tasks/{id}`).
   - Set up modern JWT authentication with `/auth/register` and `/auth/login` endpoints using Spring Security and jjwt 0.12.6.
-- **Current Task**: Ongoing backend development.
+  - Integrated H2 database with JPA/Hibernate for User and Task entities, supporting authentication and CRUD operations.
+- **Current Task**: Write backend tests (unit and integration tests).
 
 ## Setup Instructions
 1. **Clone the Repository**:
@@ -38,19 +39,21 @@ This is a full-stack Todo List application built with React (frontend), Spring B
      mvn spring-boot:run
      ```
    - Access the H2 console at `http://localhost:8080/h2-console` (username: sa, password: <empty>).
-   - Verify the schema: Check for `USERS` and `TASKS` tables in the H2 console.
+   - Verify the database schema:
+     - Check for `USERS` table (columns: `ID`, `USERNAME`, `PASSWORD`, `TASKS`).
+     - Check for `TASKS` table (columns: `ID`, `TITLE`, `DESCRIPTION`, `STATUS`, `USER_ID`).
 4. **Test the APIs**:
    - Use tools like Postman or curl to test authentication and task endpoints:
      ```bash
-     # Register a user
+     # Register a user (stores in USERS table)
      curl -X POST http://localhost:8080/auth/register -H "Content-Type: application/json" -d '{"username":"testuser","password":"testpass"}'
      # Login to get JWT token
      curl -X POST http://localhost:8080/auth/login -H "Content-Type: application/json" -d '{"username":"testuser","password":"testpass"}'
      # Save the returned JWT token
      TOKEN="your_jwt_token_here"
-     # Create a task (include JWT in Authorization header)
+     # Create a task (stores in TASKS table with USER_ID)
      curl -X POST http://localhost:8080/tasks -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"title":"Test Task","description":"Test Description","status":"PENDING"}'
-     # Get all tasks
+     # Get all tasks for the authenticated user
      curl http://localhost:8080/tasks -H "Authorization: Bearer $TOKEN"
      # Get a task by ID
      curl http://localhost:8080/tasks/1 -H "Authorization: Bearer $TOKEN"
@@ -59,6 +62,9 @@ This is a full-stack Todo List application built with React (frontend), Spring B
      # Delete a task
      curl -X DELETE http://localhost:8080/tasks/1 -H "Authorization: Bearer $TOKEN"
      ```
+   - Verify database operations in H2 console:
+     - After registering a user, check `USERS` table for new entry (hashed password).
+     - After creating a task, check `TASKS` table for new entry with correct `USER_ID`.
 5. **Documentation**:
    - Requirements are documented in `docs/requirements.md`.
    - Architecture is documented in `docs/architecture.md`.
@@ -69,7 +75,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
 - **Branching Strategy**:
   - `main`: Production-ready code, protected branch.
   - `develop`: Integration branch for feature development.
-  - `feature/<task-name>`: Feature branches for specific tasks (e.g., `feature/backend-crud`).
+  - `feature/<task-name>`: Feature branches for specific tasks (e.g., `feature/integrate-database`).
   - `bugfix/<issue-id>`: Branches for bug fixes.
 - **Git Workflow**:
   1. Create a feature branch from `develop`: `git checkout develop && git checkout -b feature/<task-name>`.
@@ -78,7 +84,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   4. Create a pull request (PR) to `develop` for review.
   5. After approval, merge PR and delete the feature branch.
 - **Commit Message Guidelines**:
-  - Use present tense (e.g., "Add task CRUD endpoints" instead of "Added").
+  - Use present tense (e.g., "Add database integration" instead of "Added").
   - Reference task or issue numbers if applicable.
 - Ensure all changes are documented in `docs/` where applicable.
 - Run local tests (to be set up in later phases) before pushing changes.
