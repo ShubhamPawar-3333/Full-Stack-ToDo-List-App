@@ -24,29 +24,29 @@ public class TaskController {
     }
 
     /**
-     * Creates a new task.
+     * Creates a new task for the authenticated user.
      *
      * @param taskDTO The task data.
      * @return The created task DTO.
      */
     @PostMapping
     public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO){
-        // Note: User is placeholder; authentication will be implemented later.
-        User user = new User("tempUser", "tempPassword") // temporary for testing
-        TaskDTO createdTask = taskService.createTask(taskDTO, user);
+//        // Note: User is placeholder; authentication will be implemented later.
+//        User user = new User("tempUser", "tempPassword") // temporary for testing
+        TaskDTO createdTask = taskService.createTask(taskDTO);
         return ResponseEntity.ok(createdTask);
     }
 
     /**
-     * Retrieves all tasks for a user.
+     * Retrieves all tasks for the authenticated user.
      *
      * @return List of task DTOs.
      */
     @GetMapping
     public ResponseEntity<List<TaskDTO>> getTasks() {
-        // Note: User is placeholder; authentication will be implemented later.
-        User user = new User("tempUser", "tempPassword") // temporary for testing
-        return ResponseEntity.ok(taskService.getTaskByUser(user));
+//        // Note: User is placeholder; authentication will be implemented later.
+//        User user = new User("tempUser", "tempPassword") // temporary for testing
+        return ResponseEntity.ok(taskService.getTaskByUser());
     }
 
     /**
