@@ -12,9 +12,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,26 +46,14 @@ public class TaskServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private Authentication authentication;
-
-    @Mock
-    private SecurityContext securityContext;
-
     @InjectMocks
     private TaskService taskService;
-
-    @BeforeEach
-    void setUp() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("testuser");
-        SecurityContextHolder.setContext(securityContext);
-    }
 
     /**
      * Tests successful task creation for authenticated user.
      */
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void createTask_ValidInput_ReturnsTaskDTO() {
         TaskDTO taskDTO = new TaskDTO("Test Task", "Description", TaskStatus.PENDING);
         User user = new User(1L, "testuser", "encoded-pass", null);
@@ -85,6 +75,7 @@ public class TaskServiceTest {
      * Tests task creation when user is not found.
      */
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void createTask_UserNotFound_ThrowsException() {
         TaskDTO taskDTO = new TaskDTO("Test Task", "Description", TaskStatus.PENDING);
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.empty());
@@ -99,6 +90,7 @@ public class TaskServiceTest {
      * Tests retrieval of tasks for authenticated user.
      */
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void getTaskByUser_ReturnsTaskList() {
         User user = new User(1L, "testuser", "encoded-pass", null);
         Task task = new Task(1L, "Test Task", "Description", TaskStatus.PENDING, user);
@@ -120,6 +112,7 @@ public class TaskServiceTest {
      * Tests retrieval of a task by ID.
      */
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void getTaskByID_TaskExists_ReturnsTaskDTO() {
         User user = new User(1L, "testuser", "encoded-pass", null);
         Task task = new Task(1L, "Test Task", "Description", TaskStatus.PENDING, user);
@@ -153,6 +146,7 @@ public class TaskServiceTest {
      * Tests successful task update.
      */
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void updateTask_TaskExists_ReturnsUpdatedTaskDTO() {
         User user = new User(1L, "testuser", "encoded-pass", null);
         Task task = new Task(1L, "Test Task", "Description", TaskStatus.PENDING, user);
@@ -192,6 +186,7 @@ public class TaskServiceTest {
      * Tests successful task deletion.
      */
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void deleteTask_TaskExists_ReturnsTrue() {
         when(taskRepository.existsById(1L)).thenReturn(true);
         doNothing().when(taskRepository).deleteById(1L);

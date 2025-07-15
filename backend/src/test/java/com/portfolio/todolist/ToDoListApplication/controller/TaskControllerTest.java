@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -37,16 +38,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Tests all task CRUD endpoints, including validation error handling.
  */
 @ExtendWith(MockitoExtension.class)
-public class TaskControllerTest {
+class TaskControllerTest {
 
     @Mock
     private TaskService taskService;
-
-    @Mock
-    private Authentication authentication;
-
-    @Mock
-    private SecurityContext securityContext;
 
     @InjectMocks
     private TaskController taskController;
@@ -59,23 +54,21 @@ public class TaskControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(taskController)
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
-        // Mock SecurityContextHolder for authenticated user to satisfy @PreAuthorize
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("testuser");
-        SecurityContextHolder.setContext(securityContext);
     }
 
     /**
      * Tests successful task creation with valid input.
      */
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void createTask_ValidInput_ReturnsTaskDTO() throws Exception {
-        TaskDTO taskDTO = new TaskDTO("Test task", "Description", TaskStatus.PENDING);
+        TaskDTO taskDTO = new TaskDTO("Test Task", "Description", TaskStatus.PENDING);
         when(taskService.createTask(any(TaskDTO.class))).thenReturn(taskDTO);
 
         mockMvc.perform(post("/tasks")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"title\":\"Test Task\",\"description\":\"Description\",\"status\":\"PENDING\"}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Test Task\",\"description\":\"Description\",\"status\":\"PENDING\"}"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Test Task"))
                 .andExpect(jsonPath("$.description").value("Description"))
                 .andExpect(jsonPath("$.status").value("PENDING"));
@@ -87,10 +80,10 @@ public class TaskControllerTest {
      * Tests task creation with invalid input (empty title).
      */
     @Test
-    void createTask_EmptyTitle_ReturnValidationError() throws Exception {
+    void createTask_EmptyTitle_ReturnsValidationError() throws Exception {
         mockMvc.perform(post("/tasks")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"title\":\"\",\"description\":\"Description\",\"status\":\"PENDING\"}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"\",\"description\":\"Description\",\"status\":\"PENDING\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Title is required"));
 
@@ -101,6 +94,7 @@ public class TaskControllerTest {
      * Tests successful retrieval of all tasks for authenticated user.
      */
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void getTaskByUser_ReturnsTaskList() throws Exception {
         TaskDTO taskDTO = new TaskDTO("Test Task", "Description", TaskStatus.PENDING);
         List<TaskDTO> tasks = Collections.singletonList(taskDTO);
@@ -120,12 +114,30 @@ public class TaskControllerTest {
      * Tests successful retrieval of a task by ID.
      */
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void getTaskById_TaskExists_ReturnsTaskDTO() throws Exception {
         TaskDTO taskDTO = new TaskDTO("Test Task", "Description", TaskStatus.PENDING);
         when(taskService.getTaskByID(eq(1L))).thenReturn(taskDTO);
 
         mockMvc.perform(get("/tasks/1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Test Task"))
+                .andExpect(jsonPath("$.description").value("Description"))
+                .andExpect(jsonPath("$.status").value("PENDING"));
+
+        verify(taskService).getTaskByID(eq(1L));
+    }
+
+    /**
+     * Tests retrieval of a non-existent task by ID.
+     */
+    @Test
+    void getTaskById_TaskNotFound_Returns404() throws Exception {
+        when(taskService.getTaskByID(eq(1L))).thenReturn(null);
+
+        mockMvc.perform(get("/tasks/1")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
         verify(taskService).getTaskByID(eq(1L));
@@ -135,13 +147,14 @@ public class TaskControllerTest {
      * Tests successful task update with valid input.
      */
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void updateTask_ValidInput_ReturnsUpdatedTaskDTO() throws Exception {
-        TaskDTO taskDTO = new TaskDTO("Test Task", "Description", TaskStatus.PENDING);
+        TaskDTO taskDTO = new TaskDTO("Updated Task", "Updated Description", TaskStatus.COMPLETED);
         when(taskService.updateTask(eq(1L), any(TaskDTO.class))).thenReturn(taskDTO);
 
         mockMvc.perform(put("/tasks/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"title\":\"Updated Task\",\"description\":\"Updated Description\",\"status\":\"COMPLETED\"}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Updated Task\",\"description\":\"Updated Description\",\"status\":\"COMPLETED\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Updated Task"))
                 .andExpect(jsonPath("$.description").value("Updated Description"))
@@ -158,8 +171,8 @@ public class TaskControllerTest {
         when(taskService.updateTask(eq(1L), any(TaskDTO.class))).thenReturn(null);
 
         mockMvc.perform(put("/tasks/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"title\":\"Updated Task\",\"description\":\"Updated Description\",\"status\":\"COMPLETED\"}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Updated Task\",\"description\":\"Updated Description\",\"status\":\"COMPLETED\"}"))
                 .andExpect(status().isNotFound());
 
         verify(taskService).updateTask(eq(1L), any(TaskDTO.class));
@@ -169,11 +182,12 @@ public class TaskControllerTest {
      * Tests successful task deletion.
      */
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void deleteTask_TaskExists_Returns204() throws Exception {
         when(taskService.deleteTask(eq(1L))).thenReturn(true);
 
         mockMvc.perform(delete("/tasks/1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         verify(taskService).deleteTask(eq(1L));
@@ -187,7 +201,7 @@ public class TaskControllerTest {
         when(taskService.deleteTask(eq(1L))).thenReturn(false);
 
         mockMvc.perform(delete("/tasks/1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
         verify(taskService).deleteTask(eq(1L));

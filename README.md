@@ -13,11 +13,12 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Planned CI/CD pipeline (see `docs/ci-cd-pipeline.md`).
   - Set up Spring Boot project in `backend/` directory.
   - Designed database schema for Users and Tasks tables using JPA, Lombok, and TaskStatus enum.
-  - Implemented REST APIs for task CRUD operations (`POST /tasks`, `GET /tasks`, `PUT /tasks/{id}`, `DELETE /tasks/{id}`).
+  - Implemented REST APIs for task CRUD operations (`POST /tasks`, `GET /tasks`, `GET /tasks/{id}`, `PUT /tasks/{id}`, `DELETE /tasks/{id}`).
   - Set up modern JWT authentication with `/auth/register` and `/auth/login` endpoints using Spring Security and jjwt 0.12.6.
   - Integrated H2 database with JPA/Hibernate for User and Task entities, supporting authentication and CRUD operations.
   - Added input validation for user and task inputs using @Valid and custom validators, with global exception handling.
-- **Current Task**: Write unit tests (unit and integration tests).
+  - Wrote unit tests for controllers, services, and repositories using JUnit 5 and Mockito in `com.portfolio.todolist.ToDoListApplication`.
+- **Current Task**: Set Up React Project (Phase 3).
 
 ## Setup Instructions
 1. **Clone the Repository**:
@@ -78,6 +79,14 @@ This is a full-stack Todo List application built with React (frontend), Spring B
      curl -X POST http://localhost:8080/tasks -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"title":"Test Task","description":"Test Description"}'
      # Expected response: {"status":"Status is required"}
      ```
+   - Run unit tests:
+     ```bash
+     cd backend
+     mvn test
+     ```
+     - Tests cover `AuthController`, `TaskController`, `UserService`, `TaskService`, `UserRepository`, and `TaskRepository` in `com.portfolio.todolist.ToDoListApplication`.
+     - Use `mvn test -Dtest=com.portfolio.todolist.ToDoListApplication.controller.AuthControllerTest` to run specific tests.
+     - Verify test coverage using JaCoCo (to be integrated in CI/CD pipeline).
    - Verify database operations in H2 console:
      - After registering a user, check `USERS` table for new entry (hashed password).
      - After creating a task, check `TASKS` table for new entry with correct `USER_ID`.
@@ -91,7 +100,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
 - **Branching Strategy**:
   - `main`: Production-ready code, protected branch.
   - `develop`: Integration branch for feature development.
-  - `feature/<task-name>`: Feature branches for specific tasks (e.g., `feature/add-input-validation`).
+  - `feature/<task-name>`: Feature branches for specific tasks (e.g., `feature/write-unit-tests`).
   - `bugfix/<issue-id>`: Branches for bug fixes.
 - **Git Workflow**:
   1. Create a feature branch from `develop`: `git checkout develop && git checkout -b feature/<task-name>`.
@@ -100,7 +109,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   4. Create a pull request (PR) to `develop` for review.
   5. After approval, merge PR and delete the feature branch.
 - **Commit Message Guidelines**:
-  - Use present tense (e.g., "Add input validation" instead of "Added").
+  - Use present tense (e.g., "Add unit tests" instead of "Added").
   - Reference task or issue numbers if applicable.
 - Ensure all changes are documented in `docs/` where applicable.
-- Run local tests (to be set up in later phases) before pushing changes.
+- Run local tests before pushing changes: `mvn test`.
