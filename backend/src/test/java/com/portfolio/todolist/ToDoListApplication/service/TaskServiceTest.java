@@ -102,7 +102,7 @@ public class TaskServiceTest {
     void getTaskByUser_ReturnsTaskList() {
         User user = new User(1L, "testuser", "encoded-pass", null);
         Task task = new Task(1L, "Test Task", "Description", TaskStatus.PENDING, user);
-        List<Task> tasks = Collections.singletonList(tasks);
+        List<Task> tasks = Collections.singletonList(task);
 
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
         when(taskRepository.findAll()).thenReturn(tasks);
