@@ -125,7 +125,6 @@ public class TaskService {
      */
     private TaskDTO toDTO(Task task) {
         return new TaskDTO(
-                task.getId(),
                 task.getTitle(),
                 task.getDescription(),
                 task.getStatus()

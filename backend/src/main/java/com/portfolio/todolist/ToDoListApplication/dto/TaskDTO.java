@@ -16,10 +16,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskDTO {
-    /**
-     * Unique identifier of the task.
-     */
-    private Long id;
 
     /**
      * Title or name of the task.
