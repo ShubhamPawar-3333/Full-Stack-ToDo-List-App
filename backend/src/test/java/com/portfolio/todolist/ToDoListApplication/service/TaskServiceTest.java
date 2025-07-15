@@ -12,11 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +36,7 @@ import static org.mockito.Mockito.when;
  * Tests task CRUD operations with mocked dependencies.
  */
 @ExtendWith(MockitoExtension.class)
-public class TaskServiceTest {
+class TaskServiceTest {
 
     @Mock
     private TaskRepository taskRepository;
@@ -46,15 +44,39 @@ public class TaskServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private Authentication authentication;
+
+    @Mock
+    private SecurityContext securityContext;
+
     @InjectMocks
     private TaskService taskService;
+
+    /**
+     * Sets up the test environment. SecurityContextHolder is mocked only in tests
+     * that require authentication to avoid unnecessary stubbing.
+     */
+    @BeforeEach
+    void setUp() {
+        // No SecurityContextHolder setup here to avoid unnecessary stubbing
+    }
+
+    /**
+     * Sets up SecurityContextHolder for tests requiring authentication.
+     */
+    private void setupSecurityContext() {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("testuser");
+        SecurityContextHolder.setContext(securityContext);
+    }
 
     /**
      * Tests successful task creation for authenticated user.
      */
     @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
     void createTask_ValidInput_ReturnsTaskDTO() {
+        setupSecurityContext();
         TaskDTO taskDTO = new TaskDTO("Test Task", "Description", TaskStatus.PENDING);
         User user = new User(1L, "testuser", "encoded-pass", null);
         Task task = new Task(1L, "Test Task", "Description", TaskStatus.PENDING, user);
@@ -66,7 +88,6 @@ public class TaskServiceTest {
         assertEquals("Test Task", result.getTitle());
         assertEquals("Description", result.getDescription());
         assertEquals(TaskStatus.PENDING, result.getStatus());
-
         verify(taskRepository).save(any(Task.class));
         verify(userRepository).findByUsername("testuser");
     }
@@ -75,13 +96,12 @@ public class TaskServiceTest {
      * Tests task creation when user is not found.
      */
     @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
     void createTask_UserNotFound_ThrowsException() {
+        setupSecurityContext();
         TaskDTO taskDTO = new TaskDTO("Test Task", "Description", TaskStatus.PENDING);
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.empty());
 
         assertThrows(IllegalArgumentException.class, () -> taskService.createTask(taskDTO));
-
         verify(userRepository).findByUsername("testuser");
         verify(taskRepository, never()).save(any(Task.class));
     }
@@ -90,12 +110,11 @@ public class TaskServiceTest {
      * Tests retrieval of tasks for authenticated user.
      */
     @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
     void getTaskByUser_ReturnsTaskList() {
+        setupSecurityContext();
         User user = new User(1L, "testuser", "encoded-pass", null);
         Task task = new Task(1L, "Test Task", "Description", TaskStatus.PENDING, user);
         List<Task> tasks = Collections.singletonList(task);
-
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
         when(taskRepository.findAll()).thenReturn(tasks);
 
@@ -103,7 +122,6 @@ public class TaskServiceTest {
 
         assertEquals(1, result.size());
         assertEquals("Test Task", result.get(0).getTitle());
-
         verify(taskRepository).findAll();
         verify(userRepository).findByUsername("testuser");
     }
@@ -112,11 +130,9 @@ public class TaskServiceTest {
      * Tests retrieval of a task by ID.
      */
     @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
     void getTaskByID_TaskExists_ReturnsTaskDTO() {
         User user = new User(1L, "testuser", "encoded-pass", null);
         Task task = new Task(1L, "Test Task", "Description", TaskStatus.PENDING, user);
-
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
 
         TaskDTO result = taskService.getTaskByID(1L);
@@ -124,7 +140,6 @@ public class TaskServiceTest {
         assertEquals("Test Task", result.getTitle());
         assertEquals("Description", result.getDescription());
         assertEquals(TaskStatus.PENDING, result.getStatus());
-
         verify(taskRepository).findById(1L);
     }
 
@@ -138,7 +153,6 @@ public class TaskServiceTest {
         TaskDTO result = taskService.getTaskByID(1L);
 
         assertNull(result);
-
         verify(taskRepository).findById(1L);
     }
 
@@ -146,12 +160,10 @@ public class TaskServiceTest {
      * Tests successful task update.
      */
     @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
     void updateTask_TaskExists_ReturnsUpdatedTaskDTO() {
         User user = new User(1L, "testuser", "encoded-pass", null);
         Task task = new Task(1L, "Test Task", "Description", TaskStatus.PENDING, user);
         Task updatedTask = new Task(1L, "Updated Task", "Updated Description", TaskStatus.COMPLETED, user);
-
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
         when(taskRepository.save(any(Task.class))).thenReturn(updatedTask);
 
@@ -161,7 +173,6 @@ public class TaskServiceTest {
         assertEquals("Updated Task", result.getTitle());
         assertEquals("Updated Description", result.getDescription());
         assertEquals(TaskStatus.COMPLETED, result.getStatus());
-
         verify(taskRepository).findById(1L);
         verify(taskRepository).save(any(Task.class));
     }
@@ -177,7 +188,6 @@ public class TaskServiceTest {
         TaskDTO result = taskService.updateTask(1L, taskDTO);
 
         assertNull(result);
-
         verify(taskRepository).findById(1L);
         verify(taskRepository, never()).save(any(Task.class));
     }
@@ -186,7 +196,6 @@ public class TaskServiceTest {
      * Tests successful task deletion.
      */
     @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
     void deleteTask_TaskExists_ReturnsTrue() {
         when(taskRepository.existsById(1L)).thenReturn(true);
         doNothing().when(taskRepository).deleteById(1L);
@@ -194,7 +203,6 @@ public class TaskServiceTest {
         boolean result = taskService.deleteTask(1L);
 
         assertTrue(result);
-
         verify(taskRepository).existsById(1L);
         verify(taskRepository).deleteById(1L);
     }
@@ -209,7 +217,6 @@ public class TaskServiceTest {
         boolean result = taskService.deleteTask(1L);
 
         assertFalse(result);
-
         verify(taskRepository).existsById(1L);
         verify(taskRepository, never()).deleteById(1L);
     }

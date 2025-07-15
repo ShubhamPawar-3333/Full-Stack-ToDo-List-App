@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
  * Tests user registration, login, and UserDetails loading with mocked dependencies.
  */
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -52,7 +52,6 @@ public class UserServiceTest {
     @Test
     void registerUser_ValidInput_ReturnsUsername() {
         UserDTO userDTO = new UserDTO("testuser", "testpass");
-
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("testpass")).thenReturn("encoded-pass");
         when(userRepository.save(any(User.class))).thenReturn(new User(1L, "testuser", "encoded-pass", null));
@@ -60,7 +59,6 @@ public class UserServiceTest {
         String result = userService.registerUser(userDTO);
 
         assertEquals("testuser", result);
-
         verify(passwordEncoder).encode("testpass");
         verify(userRepository).save(any(User.class));
     }
@@ -71,11 +69,9 @@ public class UserServiceTest {
     @Test
     void registerUser_UsernameExists_ThrowsException() {
         UserDTO userDTO = new UserDTO("testuser", "testpass");
-
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(new User()));
 
         assertThrows(IllegalArgumentException.class, () -> userService.registerUser(userDTO));
-
         verify(userRepository).findByUsername("testuser");
         verify(userRepository, never()).save(any(User.class));
     }
@@ -83,10 +79,10 @@ public class UserServiceTest {
     /**
      * Tests successful user login.
      */
+    @Test
     void loginUser_ValidCredentials_ReturnsToken() {
         UserDTO userDTO = new UserDTO("testuser", "testpass");
         User user = new User(1L, "testuser", "encoded-pass", null);
-
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("testpass", "encoded-pass")).thenReturn(true);
         when(jwtTokenProvider.generateToken("testuser")).thenReturn("jwt-token");
@@ -94,7 +90,6 @@ public class UserServiceTest {
         String result = userService.loginUser(userDTO);
 
         assertEquals("jwt-token", result);
-
         verify(userRepository).findByUsername("testuser");
         verify(passwordEncoder).matches("testpass", "encoded-pass");
         verify(jwtTokenProvider).generateToken("testuser");
@@ -106,11 +101,9 @@ public class UserServiceTest {
     @Test
     void loginUser_InvalidUsername_ThrowsException() {
         UserDTO userDTO = new UserDTO("testuser", "testpass");
-
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.empty());
 
         assertThrows(IllegalArgumentException.class, () -> userService.loginUser(userDTO));
-
         verify(userRepository).findByUsername("testuser");
         verify(passwordEncoder, never()).matches(any(), any());
     }
@@ -122,12 +115,10 @@ public class UserServiceTest {
     void loginUser_InvalidPassword_ThrowsException() {
         UserDTO userDTO = new UserDTO("testuser", "wrongpass");
         User user = new User(1L, "testuser", "encoded-pass", null);
-
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("wrongpass", "encoded-pass")).thenReturn(false);
 
         assertThrows(IllegalArgumentException.class, () -> userService.loginUser(userDTO));
-
         verify(userRepository).findByUsername("testuser");
         verify(passwordEncoder).matches("wrongpass", "encoded-pass");
     }
@@ -138,7 +129,6 @@ public class UserServiceTest {
     @Test
     void loadUserByUsername_UserExists_ReturnsUserDetails() {
         User user = new User(1L, "testuser", "encoded-pass", null);
-
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
 
         UserDetails userDetails = userService.loadUserByUsername("testuser");
@@ -147,7 +137,6 @@ public class UserServiceTest {
         assertEquals("encoded-pass", userDetails.getPassword());
         assertEquals(1, userDetails.getAuthorities().size());
         assertEquals("ROLE_USER", userDetails.getAuthorities().iterator().next().getAuthority());
-
         verify(userRepository).findByUsername("testuser");
     }
 
@@ -159,7 +148,6 @@ public class UserServiceTest {
         when(userRepository.findByUsername("unknown")).thenReturn(Optional.empty());
 
         assertThrows(IllegalArgumentException.class, () -> userService.loadUserByUsername("unknown"));
-
         verify(userRepository).findByUsername("unknown");
     }
 }

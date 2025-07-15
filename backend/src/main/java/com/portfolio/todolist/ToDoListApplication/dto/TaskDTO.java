@@ -21,7 +21,6 @@ public class TaskDTO {
      * Title or name of the task.
      */
     @NotBlank(message = "Title is required")
-    @Size(min = 1, max = 100, message = "Title must be between 1 and 100 characters")
     private String title;
 
     /**
