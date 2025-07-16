@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { UserContext } from '../context/UserContext'
 
 /**
  * LoginForm component renders a form for user login with username and password fields.
@@ -7,11 +8,14 @@ import React, { useState } from 'react'
 const LoginForm = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const { login } = useContext(UserContext)
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        // Placeholder for form submission logic (to be integrated in Phase 4)
-        console.log('Login submitted:', { username, password })
+        // Simulate login (to be replaced with API call in Phase 4)
+        login(username)
+        setUsername('')
+        setPassword('')
     }
     return (
         <div className='max-w-md mx-auto bg-white shadow-md rounded-lg p-6mt-8'>

@@ -9,7 +9,7 @@ This application allows users to:
 - Create, read, update, and delete tasks.
 - View tasks in a responsive, user-friendly interface.
 
-The project is currently in **Phase 3: Frontend Development**, with reusable UI components implemented for the core user interface. Future phases will include state management, routing, backend integration, and deployment.
+The project is currently in **Phase 3: Frontend Development**, with reusable UI components and state management implemented. Future phases will include routing, backend integration, and deployment.
 
 ## Technology Stack
 
@@ -68,6 +68,7 @@ frontend/
 ├── src/
 │   ├── assets/               # Static assets (e.g., react.svg)
 │   ├── components/           # Reusable React components
+│   ├── context/              # React Context for state management
 │   ├── App.jsx               # Main application component
 │   ├── index.css             # Global styles (Tailwind CSS)
 │   └── main.jsx              # Entry point for React
@@ -86,12 +87,19 @@ The following reusable UI components have been implemented in `src/components/`:
 - **LoginForm.jsx**: Renders a login form with username and password fields, styled for responsiveness with Tailwind CSS. Includes client-side state management for form inputs.
 - **TaskList.jsx**: Renders a list of tasks using `TaskCard` components in a responsive grid layout (1-3 columns based on screen size). Displays a fallback message when no tasks are available.
 
+## State Management
+
+State management is implemented using **React Context** in `src/context/`:
+- **TaskContext.jsx**: Manages the task state (array of tasks) with actions to add, update, and delete tasks. Used by `TaskList` to display tasks.
+- **UserContext.jsx**: Manages user authentication state (username, isAuthenticated) with actions for login and logout. Used by `LoginForm` to handle login state.
+- The `App.jsx` component wraps the application with `TaskProvider` and `UserProvider` to make these contexts available to all components.
+
 ## Contribution Guidelines
 
 1. **Branching Strategy**:
    - Use `main` for production-ready code.
    - Use `develop` for integration of completed features.
-   - Create feature branches (e.g., `feature/design-ui-components`) for new tasks.
+   - Create feature branches (e.g., `feature/implement-state-management`) for new tasks.
    - Example:
      ```bash
      git checkout -b feature/<task-name>
@@ -103,11 +111,11 @@ The following reusable UI components have been implemented in `src/components/`:
 
 2. **Code Style**:
    - Follow ESLint and Prettier rules (configured in `eslint.config.js`).
-   - Use JSDoc comments for all React components.
+   - Use JSDoc comments for all React components and context providers.
    - Ensure Tailwind CSS is used for styling to maintain consistency.
 
 3. **Commit Messages**:
-   - Use clear, descriptive messages (e.g., "Add TaskCard component with Tailwind styling").
+   - Use clear, descriptive messages (e.g., "Implement state management with React Context").
    - Reference related tasks or issues if using a project management tool (e.g., Jira, Trello).
 
 4. **Pull Requests**:
@@ -119,9 +127,10 @@ The following reusable UI components have been implemented in `src/components/`:
 The project is in **Phase 3: Frontend Development**, with the following completed:
 - Initialized React project with Vite and Tailwind CSS.
 - Implemented reusable UI components (`Header`, `TaskCard`, `LoginForm`, `TaskList`) with responsive Tailwind CSS styling.
+- Implemented state management using React Context for tasks and user authentication.
 - Configured ESLint and Prettier for code quality.
 
-Next steps include implementing state management, routing, and backend integration, as outlined in the project roadmap.
+Next steps include setting up routing, backend integration, and deployment, as outlined in the project roadmap.
 
 ## License
 

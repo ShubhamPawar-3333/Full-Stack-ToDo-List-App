@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Taskcard from './Taskcard'
+import { TaskContext } from '../context/TaskContext'
 
 /**
  * TaskList component renders a list of tasks using TaskCard components.
- * @param {Object} props - Component props
- * @param {Array} props.tasks - Array of task objects with id, title, description, and status
  * @returns {JSX.Element} A list of TaskCard components
  */
-const TaskList = ({ tasks }) => {
+const TaskList = () => {
+    const { tasks } = useContext(TaskContext)
+    
     return (
         <div className="container mx-auto p-4">
             {tasks.length > 0 ? (
