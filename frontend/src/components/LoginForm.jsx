@@ -3,7 +3,7 @@ import { UserContext } from '../context/UserContext'
 
 /**
  * LoginForm component renders a form for user login with validated username and password fields.
- * @returns {JSX.Element} A login form with input fields, validation, and a submit button
+ * @returns {JSX.Element} A responsive login form with input fields, validation, and a submit button
  */
 const LoginForm = () => {
   const [username, setUsername] = useState('')
@@ -47,12 +47,14 @@ const LoginForm = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto bg-white shadow-md rounded-lg p-6 mt-8">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Login</h2>
-      {apiError && <p className="text-red-500 text-center mb-4">{apiError}</p>}
+    <div className="w-full max-w-md mx-auto bg-white shadow-md rounded-lg p-4 sm:p-6 mt-6 sm:mt-8">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">
+        Login
+      </h2>
+      {apiError && <p className="text-red-500 text-sm sm:text-base text-center mb-4">{apiError}</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="username" className="block text-gray-700 font-medium mb-2">
+          <label htmlFor="username" className="block text-gray-700 font-medium text-sm sm:text-base mb-2">
             Username
           </label>
           <input
@@ -60,18 +62,18 @@ const LoginForm = () => {
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className={`w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full p-2 sm:p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base ${
               errors.username ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="Enter your username"
             required
           />
           {errors.username && (
-            <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.username}</p>
           )}
         </div>
-        <div className="mb-6">
-          <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
+        <div className="mb-4 sm:mb-6">
+          <label htmlFor="password" className="block text-gray-700 font-medium text-sm sm:text-base mb-2">
             Password
           </label>
           <input
@@ -79,19 +81,19 @@ const LoginForm = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={`w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full p-2 sm:p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base ${
               errors.password ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="Enter your password"
             required
           />
           {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.password}</p>
           )}
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
+          className="w-full bg-blue-600 text-white py-2 sm:py-3 rounded-md text-sm sm:text-base hover:bg-blue-700 transition-colors"
         >
           Log In
         </button>

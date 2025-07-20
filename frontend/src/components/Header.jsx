@@ -2,20 +2,20 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 /**
- * Header component renders a responsive navigation bar with links.
+ * Header component renders a responsive navigation bar with a hamburger menu for mobile devices.
  * @returns {JSX.Element} A header with navigation menu
  */
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <header className="bg-blue-600 text-white p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-xl font-bold">Todo List</h1>
+    <header className="bg-blue-600 text-white py-3 sm:py-4">
+      <div className="container mx-auto px-4 flex justify-between items-center">
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold">Todo List</h1>
         <nav>
           <button
+            className="md:hidden focus:outline-none p-2"
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden focus:outline-none"
           >
             <svg
               className="w-6 h-6"
@@ -32,15 +32,25 @@ const Header = () => {
               />
             </svg>
           </button>
-          <ul className={`${ isOpen ? 'block' : 'hidden' } md:flex md:space-x-4 mt-4 md:mt-0`} >
+          <ul
+            className={`${
+              isOpen ? 'flex' : 'hidden'
+            } flex-col md:flex md:flex-row md:space-x-6 mt-4 md:mt-0 bg-blue-600 md:bg-transparent absolute md:static top-14 left-0 right-0 px-4 pb-4 md:p-0`}
+          >
             <li>
-              <Link to="/login" className="hover:underline"> Login </Link>
+              <Link to="/login" className="block py-2 md:py-0 hover:underline text-base md:text-lg">
+                Login
+              </Link>
             </li>
             <li>
-              <Link to="/register" className="hover:underline"> Register </Link>
+              <Link to="/register" className="block py-2 md:py-0 hover:underline text-base md:text-lg">
+                Register
+              </Link>
             </li>
             <li>
-              <Link to="/tasks" className="hover:underline"> Tasks </Link>
+              <Link to="/tasks" className="block py-2 md:py-0 hover:underline text-base md:text-lg">
+                Tasks
+              </Link>
             </li>
           </ul>
         </nav>

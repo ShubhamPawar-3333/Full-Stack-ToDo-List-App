@@ -4,7 +4,7 @@ import { TaskContext } from '../context/TaskContext'
 
 /**
  * TaskList component renders a list of tasks with a validated form to add new tasks.
- * @returns {JSX.Element} A task list with add/update/delete functionality
+ * @returns {JSX.Element} A responsive task list with add/update/delete functionality
  */
 const TaskList = () => {
   const { tasks, addTask, updateTask, deleteTask, error } = useContext(TaskContext)
@@ -56,12 +56,14 @@ const TaskList = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Your Tasks</h2>
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-      <form onSubmit={handleAddTask} className="mb-8 max-w-md mx-auto">
+    <div className="container mx-auto px-4 py-4 sm:py-6">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">
+        Your Tasks
+      </h2>
+      {error && <p className="text-red-500 text-sm sm:text-base text-center mb-4">{error}</p>}
+      <form onSubmit={handleAddTask} className="mb-6 sm:mb-8 max-w-md mx-auto">
         <div className="mb-4">
-          <label htmlFor="title" className="block text-gray-700 font-medium mb-2">
+          <label htmlFor="title" className="block text-gray-700 font-medium text-sm sm:text-base mb-2">
             Task Title
           </label>
           <input
@@ -69,35 +71,36 @@ const TaskList = () => {
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className={`w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full p-2 sm:p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base ${
               errors.title ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="Enter task title"
             required
           />
-          {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+          {errors.title && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.title}</p>}
         </div>
         <div className="mb-4">
-          <label htmlFor="description" className="block text-gray-700 font-medium mb-2">
+          <label htmlFor="description" className="block text-gray-700 font-medium text-sm sm:text-base mb-2">
             Description
           </label>
           <textarea
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
             placeholder="Enter task description"
+            rows="3"
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="status" className="block text-gray-700 font-medium mb-2">
+          <label htmlFor="status" className="block text-gray-700 font-medium text-sm sm:text-base mb-2">
             Status
           </label>
           <select
             id="status"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className={`w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full p-2 sm:p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base ${
               errors.status ? 'border-red-500' : 'border-gray-300'
             }`}
             required
@@ -106,25 +109,25 @@ const TaskList = () => {
             <option value="In Progress">In Progress</option>
             <option value="Done">Done</option>
           </select>
-          {errors.status && <p className="text-red-500 text-sm mt-1">{errors.status}</p>}
+          {errors.status && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.status}</p>}
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
+          className="w-full bg-blue-600 text-white py-2 sm:py-3 rounded-md text-sm sm:text-base hover:bg-blue-700 transition-colors"
         >
           Add Task
         </button>
       </form>
       {tasks.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {tasks.map((task) => (
-            <div key={task.id}>
+            <div key={task.id} className="flex flex-col">
               <TaskCard
                 title={task.title}
                 description={task.description}
                 status={task.status}
               />
-              <div className="flex justify-between mt-2">
+              <div className="flex justify-between mt-2 space-x-2">
                 <button
                   onClick={() =>
                     handleUpdateTask(task.id, {
@@ -132,13 +135,13 @@ const TaskList = () => {
                       status: task.status === 'Done' ? 'In Progress' : 'Done',
                     })
                   }
-                  className="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600"
+                  className="flex-1 bg-yellow-500 text-white py-1 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-yellow-600"
                 >
                   Toggle Status
                 </button>
                 <button
                   onClick={() => handleDeleteTask(task.id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+                  className="flex-1 bg-red-500 text-white py-1 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-red-600"
                 >
                   Delete
                 </button>
@@ -147,7 +150,7 @@ const TaskList = () => {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-600">No tasks available.</p>
+        <p className="text-center text-gray-600 text-sm sm:text-base">No tasks available.</p>
       )}
     </div>
   )

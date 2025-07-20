@@ -9,7 +9,7 @@ This application allows users to:
 - Create, read, update, and delete tasks.
 - View tasks in a responsive, user-friendly interface.
 
-The project is currently in **Phase 3: Frontend Development**, with reusable UI components, state management, client-side routing, API integration, and form validation implemented. Future phases will include full backend integration and deployment.
+The project is currently in **Phase 3: Frontend Development**, with reusable UI components, state management, client-side routing, API integration, form validation, and responsiveness implemented. Future phases will include full backend integration and deployment.
 
 ## Technology Stack
 
@@ -84,11 +84,11 @@ frontend/
 ## UI Components
 
 The following reusable UI components have been implemented in `src/components/`:
-- **Header.jsx**: A responsive navigation bar with a hamburger menu for mobile devices, including links to `/login`, `/register`, and `/tasks` using React Router.
-- **TaskCard.jsx**: Displays a single task with its title, description, and status in a card layout. Styled with Tailwind CSS, it includes color-coded status indicators (red for To Do, yellow for In Progress, green for Done) and hover effects.
-- **LoginForm.jsx**: Renders a login form with validated username (3+ characters) and password (6+ characters, one letter, one number) fields, styled with Tailwind CSS. Integrated with `UserContext` for API-based authentication.
-- **RegisterForm.jsx**: Renders a registration form with validated username (3+ characters) and password (6+ characters, one letter, one number) fields, styled with Tailwind CSS. Integrated with `UserContext` for API-based registration.
-- **TaskList.jsx**: Renders a list of tasks using `TaskCard` components in a responsive grid layout (1-3 columns based on screen size). Includes a validated form for adding tasks (title: 3+ characters, status: valid option) and buttons for updating/deleting tasks, integrated with `TaskContext`.
+- **Header.jsx**: A responsive navigation bar with a hamburger menu for mobile devices, optimized for all screen sizes with Tailwind CSS. Includes links to `/login`, `/register`, and `/tasks` using React Router.
+- **TaskCard.jsx**: Displays a single task with title, description, and status in a card layout. Styled with Tailwind CSS for responsiveness, with adjusted font sizes and spacing for mobile and desktop.
+- **LoginForm.jsx**: Renders a login form with validated username (3+ characters) and password (6+ characters, one letter, one number) fields, styled with Tailwind CSS for responsive layouts and touch-friendly inputs.
+- **RegisterForm.jsx**: Renders a registration form with validated username (3+ characters) and password (6+ characters, one letter, one number) fields, styled with Tailwind CSS for responsive layouts and touch-friendly inputs.
+- **TaskList.jsx**: Renders a list of tasks using `TaskCard` components in a responsive grid layout (1 column on mobile, 2 on tablet, 3 on desktop). Includes a validated form for adding tasks (title: 3+ characters, status: valid option) with responsive styling.
 
 ## State Management
 
@@ -132,12 +132,20 @@ Client-side form validation is implemented in `src/components/`:
   - Status: Must be one of "To Do", "In Progress", or "Done".
 - Validation errors are displayed below input fields using Tailwind CSS for styling, with red borders on invalid inputs.
 
+## Responsiveness
+
+All UI components are optimized for responsiveness using **Tailwind CSS**:
+- **Mobile (<640px)**: Full-width layouts, compact spacing, larger touch targets for buttons and inputs, and a functional hamburger menu in `Header`.
+- **Tablet (640px–1024px)**: Adjusted font sizes, balanced spacing, and 2-column grid layouts for tasks in `TaskList`.
+- **Desktop (>1024px)**: Wider layouts with 3-column grids for tasks, larger fonts, and optimized spacing.
+- Font sizes, padding, and margins scale with screen size using Tailwind’s responsive utilities (e.g., `sm:`, `md:`, `lg:`).
+
 ## Contribution Guidelines
 
 1. **Branching Strategy**:
    - Use `main` for production-ready code.
    - Use `develop` for integration of completed features.
-   - Create feature branches (e.g., `feature/add-form-validation`) for new tasks.
+   - Create feature branches (e.g., `feature/ensure-responsiveness`) for new tasks.
    - Example:
      ```bash
      git checkout -b feature/<task-name>
@@ -153,7 +161,7 @@ Client-side form validation is implemented in `src/components/`:
    - Ensure Tailwind CSS is used for styling to maintain consistency.
 
 3. **Commit Messages**:
-   - Use clear, descriptive messages (e.g., "Add client-side form validation").
+   - Use clear, descriptive messages (e.g., "Enhance UI components for responsiveness").
    - Reference related tasks or issues if using a project management tool (e.g., Jira, Trello).
 
 4. **Pull Requests**:
@@ -169,6 +177,7 @@ The project is in **Phase 3: Frontend Development**, with the following complete
 - Configured client-side routing with React Router for `/login`, `/register`, and `/tasks`.
 - Integrated Axios for API calls to handle task CRUD operations and user authentication.
 - Added client-side form validation for task creation and user inputs.
+- Ensured responsiveness across mobile, tablet, and desktop devices using Tailwind CSS.
 - Configured ESLint and Prettier for code quality.
 
 Next steps include full backend integration and deployment, as outlined in the project roadmap.
