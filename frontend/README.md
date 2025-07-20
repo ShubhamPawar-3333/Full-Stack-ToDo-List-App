@@ -9,7 +9,7 @@ This application allows users to:
 - Create, read, update, and delete tasks.
 - View tasks in a responsive, user-friendly interface.
 
-The project is currently in **Phase 3: Frontend Development**, with reusable UI components, state management, client-side routing, and API integration implemented. Future phases will include full backend integration and deployment.
+The project is currently in **Phase 3: Frontend Development**, with reusable UI components, state management, client-side routing, API integration, and form validation implemented. Future phases will include full backend integration and deployment.
 
 ## Technology Stack
 
@@ -86,9 +86,9 @@ frontend/
 The following reusable UI components have been implemented in `src/components/`:
 - **Header.jsx**: A responsive navigation bar with a hamburger menu for mobile devices, including links to `/login`, `/register`, and `/tasks` using React Router.
 - **TaskCard.jsx**: Displays a single task with its title, description, and status in a card layout. Styled with Tailwind CSS, it includes color-coded status indicators (red for To Do, yellow for In Progress, green for Done) and hover effects.
-- **LoginForm.jsx**: Renders a login form with username and password fields, styled for responsiveness with Tailwind CSS. Integrated with `UserContext` for API-based authentication.
-- **RegisterForm.jsx**: Renders a registration form with username and password fields, styled similarly to `LoginForm` with Tailwind CSS. Integrated with `UserContext` for API-based registration.
-- **TaskList.jsx**: Renders a list of tasks using `TaskCard` components in a responsive grid layout (1-3 columns based on screen size). Includes a form for adding tasks and buttons for updating/deleting tasks, integrated with `TaskContext`.
+- **LoginForm.jsx**: Renders a login form with validated username (3+ characters) and password (6+ characters, one letter, one number) fields, styled with Tailwind CSS. Integrated with `UserContext` for API-based authentication.
+- **RegisterForm.jsx**: Renders a registration form with validated username (3+ characters) and password (6+ characters, one letter, one number) fields, styled with Tailwind CSS. Integrated with `UserContext` for API-based registration.
+- **TaskList.jsx**: Renders a list of tasks using `TaskCard` components in a responsive grid layout (1-3 columns based on screen size). Includes a validated form for adding tasks (title: 3+ characters, status: valid option) and buttons for updating/deleting tasks, integrated with `TaskContext`.
 
 ## State Management
 
@@ -121,12 +121,23 @@ API calls are integrated using **Axios** in `src/utils/api.js`:
   - `DELETE /tasks/{id}`: Deletes a task.
 - Error handling is implemented with error messages displayed in `LoginForm`, `RegisterForm`, and `TaskList` using Tailwind CSS for styling.
 
+## Form Validation
+
+Client-side form validation is implemented in `src/components/`:
+- **LoginForm.jsx** and **RegisterForm.jsx**:
+  - Username: Must be at least 3 characters.
+  - Password: Must be at least 6 characters, including at least one letter and one number.
+- **TaskList.jsx**:
+  - Title: Must be at least 3 characters and non-empty.
+  - Status: Must be one of "To Do", "In Progress", or "Done".
+- Validation errors are displayed below input fields using Tailwind CSS for styling, with red borders on invalid inputs.
+
 ## Contribution Guidelines
 
 1. **Branching Strategy**:
    - Use `main` for production-ready code.
    - Use `develop` for integration of completed features.
-   - Create feature branches (e.g., `feature/integrate-api-calls`) for new tasks.
+   - Create feature branches (e.g., `feature/add-form-validation`) for new tasks.
    - Example:
      ```bash
      git checkout -b feature/<task-name>
@@ -142,7 +153,7 @@ API calls are integrated using **Axios** in `src/utils/api.js`:
    - Ensure Tailwind CSS is used for styling to maintain consistency.
 
 3. **Commit Messages**:
-   - Use clear, descriptive messages (e.g., "Integrate Axios for task CRUD and authentication").
+   - Use clear, descriptive messages (e.g., "Add client-side form validation").
    - Reference related tasks or issues if using a project management tool (e.g., Jira, Trello).
 
 4. **Pull Requests**:
@@ -157,9 +168,10 @@ The project is in **Phase 3: Frontend Development**, with the following complete
 - Implemented state management using React Context for tasks and user authentication.
 - Configured client-side routing with React Router for `/login`, `/register`, and `/tasks`.
 - Integrated Axios for API calls to handle task CRUD operations and user authentication.
+- Added client-side form validation for task creation and user inputs.
 - Configured ESLint and Prettier for code quality.
 
-Next steps include adding form validation, full backend integration, and deployment, as outlined in the project roadmap.
+Next steps include full backend integration and deployment, as outlined in the project roadmap.
 
 ## License
 
