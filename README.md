@@ -4,7 +4,7 @@
 This is a full-stack Todo List application built with React (frontend), Spring Boot (backend), and PostgreSQL (database, using H2 for development). The application allows users to manage personal task lists with CRUD operations and secure authentication.
 
 ## Project Status
-- **Phase**: Backend Development
+- **Phase**: Integration
 - **Completed Tasks**:
   - Defined requirements (see `docs/requirements.md`).
   - Designed architecture (see `docs/architecture.md`).
@@ -18,7 +18,15 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Integrated H2 database with JPA/Hibernate for User and Task entities, supporting authentication and CRUD operations.
   - Added input validation for user and task inputs using @Valid and custom validators, with global exception handling.
   - Wrote unit tests for controllers, services, and repositories using JUnit 5 and Mockito in `com.portfolio.todolist.ToDoListApplication`.
-- **Current Task**: Set Up React Project (Phase 3).
+  - Set up React project with Vite, TailwindCSS, Axios, and React Router in `frontend/` directory.
+  - Designed UI components (`TaskCard`, `LoginForm`, `RegisterForm`, `TaskList`, `Header`).
+  - Implemented state management with React Context (`TaskContext`, `UserContext`).
+  - Set up routing for `/login`, `/register`, `/tasks` using React Router.
+  - Integrated API calls with Axios for task CRUD and authentication.
+  - Added client-side form validation for task creation and user inputs.
+  - Ensured responsiveness with TailwindCSS.
+  - Configured CORS in `SecurityConfig.java` to allow requests from `http://localhost:5173` for `/auth/**` and `/tasks/**`.
+- **Current Task**: Integrate Authentication (Phase 4).
 
 ## Setup Instructions
 1. **Clone the Repository**:
@@ -33,18 +41,33 @@ This is a full-stack Todo List application built with React (frontend), Spring B
      cd backend
      mvn install
      ```
-   - Ensure your IDE supports Lombok (e.g., enable Annotation Processing in IntelliJ IDEA or install the Lombok plugin).
-3. **Run the Backend**:
-   - Start the Spring Boot application:
+     - Ensure your IDE supports Lombok (e.g., enable Annotation Processing in IntelliJ IDEA or install the Lombok plugin).
+   - For frontend:
+     ```bash
+     cd frontend
+     npm install
+     ```
+3. **Run the Application**:
+   - Start the backend:
      ```bash
      cd backend
      mvn spring-boot:run
      ```
-   - Access the H2 console at `http://localhost:8080/h2-console` (username: sa, password: <empty>).
-   - Verify the database schema:
-     - Check for `USERS` table (columns: `ID`, `USERNAME`, `PASSWORD`, `TASKS`).
-     - Check for `TASKS` table (columns: `ID`, `TITLE`, `DESCRIPTION`, `STATUS`, `USER_ID`).
-4. **Test the APIs**:
+     - Runs on `http://localhost:8080`.
+     - Access the H2 console at `http://localhost:8080/h2-console` (username: `sa`, password: empty).
+   - Start the frontend:
+     ```bash
+     cd frontend
+     npm run dev
+     ```
+     - Runs on `http://localhost:5173` (Vite default port).
+   - **CORS Configuration**:
+     - The backend allows cross-origin requests from `http://localhost:5173` for `/auth/**` and `/tasks/**`.
+     - Ensure the frontend runs on `http://localhost:5173` to avoid CORS issues.
+4. **Verify Database**:
+   - Check `USERS` table (columns: `ID`, `USERNAME`, `PASSWORD`, `TASKS`).
+   - Check `TASKS` table (columns: `ID`, `TITLE`, `DESCRIPTION`, `STATUS`, `USER_ID`).
+5. **Test the APIs**:
    - Use tools like Postman or curl to test authentication and task endpoints:
      ```bash
      # Register a user (stores in USERS table)
@@ -87,14 +110,11 @@ This is a full-stack Todo List application built with React (frontend), Spring B
      - Tests cover `AuthController`, `TaskController`, `UserService`, `TaskService`, `UserRepository`, and `TaskRepository` in `com.portfolio.todolist.ToDoListApplication`.
      - Use `mvn test -Dtest=com.portfolio.todolist.ToDoListApplication.controller.AuthControllerTest` to run specific tests.
      - Verify test coverage using JaCoCo (to be integrated in CI/CD pipeline).
-   - Verify database operations in H2 console:
-     - After registering a user, check `USERS` table for new entry (hashed password).
-     - After creating a task, check `TASKS` table for new entry with correct `USER_ID`.
-5. **Documentation**:
-   - Requirements are documented in `docs/requirements.md`.
-   - Architecture is documented in `docs/architecture.md`.
-   - Development environment setup is documented in `docs/dev-environment.md`.
-   - CI/CD pipeline plan is documented in `docs/ci-cd-pipeline.md`.
+6. **Documentation**:
+   - Requirements: `docs/requirements.md`.
+   - Architecture: `docs/architecture.md`.
+   - Development environment: `docs/dev-environment.md`.
+   - CI/CD pipeline: `docs/ci-cd-pipeline.md`.
 
 ## Contribution Guidelines
 - **Branching Strategy**:
@@ -112,4 +132,4 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Use present tense (e.g., "Add unit tests" instead of "Added").
   - Reference task or issue numbers if applicable.
 - Ensure all changes are documented in `docs/` where applicable.
-- Run local tests before pushing changes: `mvn test`.
+- Run local tests before pushing changes: `mvn test` (backend), `npm run lint` (frontend).

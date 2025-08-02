@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { UserContext } from '../context/UserContext'
 
 /**
  * Header component renders a responsive navigation bar with a hamburger menu for mobile devices.
@@ -7,6 +8,7 @@ import { Link } from 'react-router-dom'
  */
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const { user, logout } = useContext(UserContext)
 
   return (
     <header className="bg-blue-600 text-white py-3 sm:py-4">
@@ -37,21 +39,36 @@ const Header = () => {
               isOpen ? 'flex' : 'hidden'
             } flex-col md:flex md:flex-row md:space-x-6 mt-4 md:mt-0 bg-blue-600 md:bg-transparent absolute md:static top-14 left-0 right-0 px-4 pb-4 md:p-0`}
           >
-            <li>
-              <Link to="/login" className="block py-2 md:py-0 hover:underline text-base md:text-lg">
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link to="/register" className="block py-2 md:py-0 hover:underline text-base md:text-lg">
-                Register
-              </Link>
-            </li>
-            <li>
-              <Link to="/tasks" className="block py-2 md:py-0 hover:underline text-base md:text-lg">
-                Tasks
-              </Link>
-            </li>
+            {!user.isAuthenticated ? (
+              <>
+                <li>
+                  <Link to="/login" className="block py-2 md:py-0 hover:underline text-base md:text-lg">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="block py-2 md:py-0 hover:underline text-base md:text-lg">
+                    Register
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/tasks" className="block py-2 md:py-0 hover:underline text-base md:text-lg">
+                    Tasks
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    onClick={logout}
+                    className="block py-2 md:py-0 hover:underline text-base md:text-lg"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </div>

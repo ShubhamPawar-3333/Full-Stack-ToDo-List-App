@@ -26,7 +26,7 @@ export const TaskProvider = ({ children }) => {
       setTasks(response.data)
       setError(null)
     } catch (err) {
-      setError('Failed to fetch tasks')
+      setError(err.response?.data ? JSON.stringify(err.response.data) : 'Failed to fetch tasks')
     }
   }
 
@@ -40,7 +40,7 @@ export const TaskProvider = ({ children }) => {
       setTasks([...tasks, response.data])
       setError(null)
     } catch (err) {
-      setError('Failed to add task')
+      setError(err.response?.data ? JSON.stringify(err.response.data) : 'Failed to add task')
     }
   }
 
@@ -55,7 +55,7 @@ export const TaskProvider = ({ children }) => {
       setTasks(tasks.map((task) => (task.id === id ? response.data : task)))
       setError(null)
     } catch (err) {
-      setError('Failed to update task')
+      setError(err.response?.data ? JSON.stringify(err.response.data) : 'Failed to update task')
     }
   }
 
@@ -69,7 +69,7 @@ export const TaskProvider = ({ children }) => {
       setTasks(tasks.filter((task) => task.id !== id))
       setError(null)
     } catch (err) {
-      setError('Failed to delete task')
+      setError(err.response?.data ? JSON.stringify(err.response.data) : 'Failed to delete task')
     }
   }
 

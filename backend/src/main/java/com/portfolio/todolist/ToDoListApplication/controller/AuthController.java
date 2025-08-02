@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * REST controller for user authentication endpoints.
  */
@@ -32,9 +35,11 @@ public class AuthController {
      * @return The registered username.
      */
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<Map<String, String>> register(@Valid @RequestBody UserDTO userDTO) {
         String username = userService.registerUser(userDTO);
-        return ResponseEntity.ok(username);
+        Map<String, String> response = new HashMap<>();
+        response.put("usernam", username);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -44,8 +49,10 @@ public class AuthController {
      * @return The JWT token.
      */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody UserDTO userDTO) {
         String token = userService.loginUser(userDTO);
-        return ResponseEntity.ok(token);
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        return ResponseEntity.ok(response);
     }
 }

@@ -10,11 +10,10 @@ import React from 'react'
  */
 const TaskCard = ({ title, description, status }) => {
   const statusColor =
-    status === 'To Do'
+    status === 'PENDING'
       ? 'bg-red-100 text-red-800'
-      : status === 'In Progress'
-      ? 'bg-yellow-100 text-yellow-800'
       : 'bg-green-100 text-green-800'
+  const displayStatus = status === 'PENDING' ? 'To Do' : 'Done'
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 sm:p-5 hover:shadow-lg transition-shadow w-full max-w-sm mx-auto">
@@ -23,7 +22,7 @@ const TaskCard = ({ title, description, status }) => {
       <span
         className={`inline-block px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${statusColor}`}
       >
-        {status}
+        {displayStatus}
       </span>
     </div>
   )

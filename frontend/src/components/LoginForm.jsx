@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../context/UserContext'
 
 /**
@@ -10,6 +11,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({ username: '', password: '' })
   const { login, error: apiError } = useContext(UserContext)
+  const navigate = useNavigate()
 
   /**
    * Validate form inputs.
@@ -42,6 +44,7 @@ const LoginForm = () => {
         setUsername('')
         setPassword('')
         setErrors({ username: '', password: '' })
+        navigate('/tasks')
       }
     }
   }

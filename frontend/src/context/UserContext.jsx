@@ -31,7 +31,7 @@ export const UserProvider = ({ children }) => {
       setError(null)
       return true
     } catch (err) {
-      setError('Login failed: Invalid credentials')
+      setError(err.response?.data ? JSON.stringify(err.response.data) : 'Login failed: Invalid credentials')
       return false
     }
   }
@@ -50,7 +50,7 @@ export const UserProvider = ({ children }) => {
       setError(null)
       return true
     } catch (err) {
-      setError('Registration failed: Username may be taken')
+      setError(err.response?.data ? JSON.stringify(err.response.data) : 'Registration failed: Username may be taken')
       return false
     }
   }

@@ -26,7 +26,7 @@ const TaskList = () => {
       isValid = false
     }
 
-    const validStatuses = ['To Do', 'In Progress', 'Done']
+    const validStatuses = ['PENDING', 'COMPLETED']
     if (!validStatuses.includes(status)) {
       newErrors.status = 'Invalid status selected'
       isValid = false
@@ -42,13 +42,16 @@ const TaskList = () => {
       await addTask({ title, description, status })
       setTitle('')
       setDescription('')
-      setStatus('To Do')
+      setStatus('PENDING')
       setErrors({ title: '', status: '' })
     }
   }
 
   const handleUpdateTask = (id, task) => {
-    updateTask(id, task)
+    updateTask(id, {
+      ...task,
+      status: task.status === 'COMPLETED' ? 'PENDING' : 'COMPLETED',
+    })
   }
 
   const handleDeleteTask = (id) => {
@@ -105,9 +108,8 @@ const TaskList = () => {
             }`}
             required
           >
-            <option value="To Do">To Do</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Done">Done</option>
+            <option value="PENDING">To Do</option>
+            <option value="COMPLETED">Done</option>
           </select>
           {errors.status && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.status}</p>}
         </div>
@@ -125,16 +127,14 @@ const TaskList = () => {
               <TaskCard
                 title={task.title}
                 description={task.description}
-                status={task.status}
+                status={task.status === 'PENDING' ? 'To Do' : 'Done'}
               />
               <div className="flex justify-between mt-2 space-x-2">
                 <button
-                  onClick={() =>
-                    handleUpdateTask(task.id, {
-                      ...task,
-                      status: task.status === 'Done' ? 'In Progress' : 'Done',
-                    })
-                  }
+                  onClick={() => handleUpdateTask(task.id, {
+                    ...task,
+                    status: task.status === 'COMPLETED' ? 'PENDING' : 'COMPLETED',
+                  })}
                   className="flex-1 bg-yellow-500 text-white py-1 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-yellow-600"
                 >
                   Toggle Status
