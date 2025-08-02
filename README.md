@@ -26,7 +26,8 @@ This is a full-stack Todo List application built with React (frontend), Spring B
   - Added client-side form validation for task creation and user inputs.
   - Ensured responsiveness with TailwindCSS.
   - Configured CORS in `SecurityConfig.java` to allow requests from `http://localhost:5173` for `/auth/**` and `/tasks/**`.
-- **Current Task**: Integrate Authentication (Phase 4).
+  - Integrated authentication with JWT token handling and local storage.
+- **Current Task**: Test End-to-End Flow (Phase 4).
 
 ## Setup Instructions
 1. **Clone the Repository**:
@@ -67,7 +68,14 @@ This is a full-stack Todo List application built with React (frontend), Spring B
 4. **Verify Database**:
    - Check `USERS` table (columns: `ID`, `USERNAME`, `PASSWORD`, `TASKS`).
    - Check `TASKS` table (columns: `ID`, `TITLE`, `DESCRIPTION`, `STATUS`, `USER_ID`).
-5. **Test the APIs**:
+5. **Test Authentication Flow**:
+   - Open `http://localhost:5173` in a browser.
+   - Navigate to `/register`, enter a username (min 3 characters) and password (min 6 characters, with a letter and number), and submit.
+   - On success, you’re redirected to `/tasks`. If registration fails (e.g., username taken), an error displays.
+   - Log out via the header’s “Logout” button, clearing the JWT token.
+   - Navigate to `/login`, enter credentials, and submit to access `/tasks`.
+   - Verify protected routes (e.g., `/tasks`) require authentication; unauthenticated users are redirected to `/login`.
+6. **Test APIs**:
    - Use tools like Postman or curl to test authentication and task endpoints:
      ```bash
      # Register a user (stores in USERS table)
@@ -110,7 +118,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
      - Tests cover `AuthController`, `TaskController`, `UserService`, `TaskService`, `UserRepository`, and `TaskRepository` in `com.portfolio.todolist.ToDoListApplication`.
      - Use `mvn test -Dtest=com.portfolio.todolist.ToDoListApplication.controller.AuthControllerTest` to run specific tests.
      - Verify test coverage using JaCoCo (to be integrated in CI/CD pipeline).
-6. **Documentation**:
+7. **Documentation**:
    - Requirements: `docs/requirements.md`.
    - Architecture: `docs/architecture.md`.
    - Development environment: `docs/dev-environment.md`.
@@ -120,7 +128,7 @@ This is a full-stack Todo List application built with React (frontend), Spring B
 - **Branching Strategy**:
   - `main`: Production-ready code, protected branch.
   - `develop`: Integration branch for feature development.
-  - `feature/<task-name>`: Feature branches for specific tasks (e.g., `feature/write-unit-tests`).
+  - `feature/<task-name>`: Feature branches for specific tasks (e.g., `feature/integrate-authentication`).
   - `bugfix/<issue-id>`: Branches for bug fixes.
 - **Git Workflow**:
   1. Create a feature branch from `develop`: `git checkout develop && git checkout -b feature/<task-name>`.

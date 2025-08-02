@@ -16,10 +16,12 @@ const api = axios.create({
  * @param {string} token - JWT token for authentication
  */
 export const setAuthToken = (token) => {
-  if (token) {
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  if (typeof token === 'string' && token.trim()) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    console.debug('JWT token set in Authorization header');
   } else {
-    delete api.defaults.headers.common['Authorization']
+    delete api.defaults.headers.common['Authorization'];
+    console.debug('JWT token cleared from Authorization header');
   }
 }
 
